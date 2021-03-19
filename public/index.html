@@ -68,16 +68,41 @@
 </head>
 
 <body>
-    <div id = "interface">
-        <input type="text" id="text" value="Insertar texto">
+    <div id="interface">
+        <input type="text" id="text" placeholder="Insertar texto">
         <br>
         <br>
-        <button><span>START</span></button>
+        <button onclick="start()"><span>START</span></button>
+        <br>
+        <br>
+        <div id="new"></div>
     </div>
 
 </body>
 <script>
-
+    function start() {
+        const text = JSON.stringify({
+            text: document.querySelector("#text").value
+        });
+        const url = 'http://tone-analyzer-michel.mybluemix.net/';
+        const Http = new XMLHttpRequest();
+        Http.open('POST', url);
+        Http.setRequestHeader('Content-Type', 'application/json');
+        Http.send(text);
+        Http.onload = () => {
+            if (Http.status != 200) {
+                console.log(Http)
+                document.querySelector("#new").innerHTML = `${JSON.parse(Http.response).error}`
+            } else {
+                const tones = Object.values(JSON.parse(Http.response).document_tone.tones);
+                var str = "";
+                tones.forEach(element => {
+                    str += `${element.tone_name}: ${element.score}<br>`
+                });
+                document.querySelector("#new").innerHTML = str
+            }
+        }
+    }
 </script>
 
 </html>
