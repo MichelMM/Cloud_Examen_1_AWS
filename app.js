@@ -24,6 +24,7 @@ app.use(cors(corsOptions))
 
 // indicamos que usaremos un router
 app.use(router)
+app.use('/', express.static(__dirname + '/public'));
 
 // iniciamos nuestro server
 app.listen(PORT,HOST, () => { console.log(`Server listening on port ${PORT} and host ${HOST}`); })
